@@ -16,7 +16,7 @@ ssh -p 2220 bandit0@bandit.labs.overthewire.org
 
 任务：获取 `readme` 文件中的密码
 
-在 bandit0 的基础上使用 `ls` 命令可以查看到当前目录下的 `readme` 文件，使用 `cat readme` 命令查看文件得到 `bandit1` 的密码为 `ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If`。
+在 bandit0 的基础上使用 `ls` 命令可以查看到当前目录下的 `readme` 文件，使用 `cat readme` 命令查看文件得到 `bandit1` 的密码。
 
 ```shell
 ssh -p 2220 bandit1@bandit.labs.overthewire.org
@@ -27,19 +27,19 @@ ssh -p 2220 bandit1@bandit.labs.overthewire.org
 
 任务：获取 `-` 文件中的密码
 
-这里不能直接使用 `cat -` 命令查看该文件。原因在于，`-` 是 `STDIN/STDOUT` 的参数。需要指定绝对路径（full location）才能打开该文件，即 `cat ./-`。密码为 `263JGJPfgU6LtdEvgfWU1XP5yac29mFx`。
+这里不能直接使用 `cat -` 命令查看该文件。原因在于，`-` 是 `STDIN/STDOUT` 的参数。需要指定绝对路径（full location）才能打开该文件，即 `cat ./-`。
 
 ## Level 2 - Level 3：获取名称包含空格的文件内容
 
 任务：获取 `--space in this filename--` 文件中的密码
 
-文件名中有空格时，需要在文件名两端添加双引号，即 `cat ./"--space in this filename--"`。密码为 `MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx`。
+文件名中有空格时，需要在文件名两端添加双引号，即 `cat ./"--space in this filename--"`。
 
 ## Level 3 - Level 4：获取隐藏文件内容
 
 任务：获取 `inhere` 文件夹中一个隐藏文件包含的密码
 
-首先使用 `cd` 命令进入该文件夹，然后使用 `ls -a` 命令查看包含隐藏文件在内的所有文件，再同样使用 `cat` 命令得到密码 `2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ`。
+首先使用 `cd` 命令进入该文件夹，然后使用 `ls -a` 命令查看包含隐藏文件在内的所有文件，再同样使用 `cat` 命令得到密码。
 
 ## Level 4 - Level 5：检测文件类型
 
@@ -58,8 +58,6 @@ file inhere/* | grep -i text
 ```shell
 cat -- inhere/-file07
 ```
-
-得出密码为 `4oQYVPkxZOOEOO5pTW81FB8j8lxXGUQw`。
 
 ## Level 5 - Level 6：多条件命令 1：可读、大小与不可执行
 
@@ -89,8 +87,6 @@ find inhere/ -type f -size 1033c ! -executable -exec file {} \; | grep "ASCII"
 
 5. `| grep "ASCII"` 只保留包含 `ASCII` 的行（即粗略筛选 ASCII 文本），但更稳妥的匹配可用 `grep -i 'text'` 或 `grep -Ei 'text|utf-8|utf-16|ascii'`。
 
-得出密码为 `HWasnPhtq9AVKe0dmk45nxy20cvUa6EG`。
-
 ## Level 6 - Level 7：多条件命令 2：所属组和用户
 
 任务：找出存放在服务器中某处的密码文件，该文件的特征是：①属于用户 `bandit7`；②属于组 `bandit6`；③文件大小为 33 bytes。
@@ -103,8 +99,6 @@ find inhere/ -type f -size 1033c ! -executable -exec file {} \; | grep "ASCII"
 find / -user bandit7 -group bandit6 -size 33c 2>/dev/null
 ```
 
-得出密码为 `morbNTDkSW6jIlUc0ymOdMaLnOlFVAaj`。
-
 ## Level 7 - Level 8：文件特定内容查找
 
 任务： `data.txt` 文件包含大量行，每一行由一个单词和一行随机字符串组成。真正的密码存放在单词 `millionth` 后。
@@ -114,8 +108,6 @@ find / -user bandit7 -group bandit6 -size 33c 2>/dev/null
 ```shell
 strings ./data. | grep -i millionth # -i 表示忽略大小写
 ```
-
-得出密码为 `dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc`。
 
 ## Level 8 - Level 9：唯一文本行查找
 
@@ -127,7 +119,7 @@ strings ./data. | grep -i millionth # -i 表示忽略大小写
 sort ./data.txt | uniq -u
 ```
 
-其中，`uniq -u` 的作用是仅显示出现一次的行。得出密码为 `4CKMh1JI91bUIZZPXDqGanal4xvAg0JM`。
+其中，`uniq -u` 的作用是仅显示出现一次的行。
 
 ## Level 9 - Level 10：正则表达式
 
@@ -141,7 +133,8 @@ strings ./data.txt | egrep '^=+'
 strings ./data.txt | grep '^=\{1,\}'	# BRE 写法
 ```
 
-`grep -E` 和 `egrep` 等价，都是表示后续参数为正则表达式。得出密码为 `FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey`。
+`grep -E` 和 `egrep` 等价，都是表示后续参数为正则表达式。
+
 
 
 
