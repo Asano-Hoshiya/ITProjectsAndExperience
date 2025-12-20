@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- 背景圆 -->
+  <circle cx="100" cy="100" r="90" fill="#f8fafc"/>
+  <circle cx="100" cy="100" r="70" fill="#f1f5f9"/>
+
+  <!-- 文件夹 -->
+  <g transform="translate(50, 55)">
+    <!-- 文件夹后部 -->
+    <path d="M10 30 L10 90 C10 95 15 100 20 100 L80 100 C85 100 90 95 90 90 L90 30 Z" fill="#cbd5e1"/>
+    <!-- 文件夹前部 -->
+    <path d="M5 40 L5 95 C5 100 10 105 15 105 L85 105 C90 105 95 100 95 95 L95 40 C95 35 90 30 85 30 L55 30 L50 20 L15 20 C10 20 5 25 5 30 Z" fill="#e2e8f0"/>
+    <!-- 文件夹标签 -->
+    <path d="M15 20 L50 20 L55 30 L15 30 C10 30 5 35 5 40 L5 30 C5 25 10 20 15 20 Z" fill="#94a3b8"/>
+  </g>
+
+  <!-- 问号 -->
+  <g transform="translate(85, 85)">
+    <circle cx="15" cy="15" r="20" fill="#2563eb" opacity="0.1"/>
+    <text x="15" y="22" text-anchor="middle" font-size="24" font-weight="bold" fill="#2563eb">?</text>
+  </g>
+
+  <!-- 小装饰 -->
+  <circle cx="45" cy="50" r="4" fill="#2563eb" opacity="0.2"/>
+  <circle cx="155" cy="60" r="3" fill="#10b981" opacity="0.2"/>
+  <circle cx="160" cy="140" r="5" fill="#f59e0b" opacity="0.2"/>
+  <circle cx="40" cy="150" r="4" fill="#8b5cf6" opacity="0.2"/>
+</svg>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="前端外语教材学习系统 - 本地化教材、课程、课文管理工具">
+    <title>外语教材学习系统 - 首页</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <!-- ========== 导航栏 ========== -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-logo">
+                <img src="images/logo.svg" alt="Logo">
+                <span>外语教材学习系统</span>
+            </a>
+
+            <button class="navbar-toggle" aria-label="切换菜单">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <!-- 中央 Logo -->
+            <div class="navbar-center-logo">
+                <img src="images/Logo.png" alt="Center Logo">
+                <!-- 或者用占位符 -->
+                <!-- <div class="logo-placeholder">LOGO</div> -->
+            </div>
+
+            <ul class="navbar-menu">
+                <li><a href="index.html" class="navbar-link active">首页</a></li>
+                <li><a href="textbooks.html" class="navbar-link">教材</a></li>
+                <li><a href="notes.html" class="navbar-link">笔记</a></li>
+                <li><a href="vocabulary.html" class="navbar-link">生词</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ========== 主内容区域 ========== -->
+    <main class="main-content">
+        <!-- Hero 区域 -->
+        <section class="hero">
+            <img src="images/hero-books.svg" alt="教材管理" class="hero-image">
+            <h1 class="hero-title">前端外语教材学习系统</h1>
+            <p class="hero-description">
+                一个完全本地化的外语教材学习工具，支持教材上传、课程管理、课文编辑、
+                笔记记录和生词管理。所有数据安全存储在浏览器中，刷新不丢失。
+            </p>
+            <div class="hero-actions">
+                <a href="textbooks.html" class="btn btn-primary btn-lg">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    开始使用
+                </a>
+                <a href="#features" class="btn btn-secondary btn-lg">了解更多</a>
+            </div>
+        </section>
+
+        <!-- 数据统计 -->
+        <section class="stats-section mb-4">
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: var(--primary-light); color: var(--primary-color);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-value" id="stat-textbooks">0</div>
+                    <div class="stat-label">本教材</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: var(--success-light); color: var(--success-color);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                    </div>
+                    <div class="stat-value" id="stat-courses">0</div>
+                    <div class="stat-label">节课程</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: var(--warning-light); color: var(--warning-color);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                    </div>
+                    <div class="stat-value" id="stat-lessons">0</div>
+                    <div class="stat-label">篇课文</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: #fce7f3; color: #ec4899;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-value" id="stat-notes">0</div>
+                    <div class="stat-label">条笔记</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: #e0e7ff; color: #6366f1;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-value" id="stat-vocabulary">0</div>
+                    <div class="stat-label">个生词</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 功能介绍 -->
+        <section class="features-section" id="features">
+            <h2 class="section-title">核心功能</h2>
+            <div class="card-grid">
+                <!-- 教材管理 -->
+                <div class="card feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">教材管理</h3>
+                    <p class="feature-description">
+                        创建和管理多本教材，支持自定义颜色标识，层级化组织课程内容
+                    </p>
+                    <a href="textbooks.html" class="btn btn-secondary mt-2">进入管理</a>
+                </div>
+
+                <!-- 笔记管理 -->
+                <div class="card feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">笔记管理</h3>
+                    <p class="feature-description">
+                        记录学习心得和笔记，支持关联教材和课文，便于复习整理
+                    </p>
+                    <a href="notes.html" class="btn btn-secondary mt-2">进入管理</a>
+                </div>
+
+                <!-- 生词管理 -->
+                <div class="card feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">生词管理</h3>
+                    <p class="feature-description">
+                        收集学习中遇到的生词，记录释义和例句，支持关联课文来源
+                    </p>
+                    <a href="vocabulary.html" class="btn btn-secondary mt-2">进入管理</a>
+                </div>
+
+                <!-- 本地存储 -->
+                <div class="card feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">本地存储</h3>
+                    <p class="feature-description">
+                        所有数据安全存储在浏览器本地，无需联网，刷新页面数据不丢失
+                    </p>
+                    <button class="btn btn-secondary mt-2" id="export-data-btn">导出数据</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 最近更新 -->
+        <section class="recent-section mt-4" id="recent-section">
+            <h2 class="section-title">最近内容</h2>
+            <div class="card">
+                <div id="recent-list">
+                    <!-- 动态加载最近内容 -->
+                </div>
+                <div id="recent-empty" class="text-center p-3" style="display: none;">
+                    <p style="color: var(--text-secondary);">暂无内容，开始添加您的第一本教材吧！</p>
+                    <a href="textbooks.html" class="btn btn-primary mt-2">添加教材</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ========== 页脚 ========== -->
+    <footer class="footer">
+        <p>© 2025 Asano Hoshiya | 数据存储于本地浏览器 |
+            <button class="footer-link" id="clear-data-btn">清除所有数据</button>
+        </p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>

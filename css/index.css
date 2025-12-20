@@ -1,0 +1,262 @@
+/* ========== Hero 区域 ========== */
+.hero {
+    text-align: center;
+    padding: 80px 40px;
+    background: url("../images/index_hero_background.png") no-repeat;
+    background-size: cover;
+    border-radius: var(--border-radius);
+    margin-bottom: 40px;
+    border: 1px solid var(--border-color);
+}
+
+.hero-image {
+    max-width: 280px;
+    margin: 0 auto 32px;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.hero-description {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto 32px;
+    line-height: 1.7;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ========== 章节标题 ========== */
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    text-align: center;
+    color: var(--text-primary);
+}
+
+/* ========== 统计卡片区域 ========== */
+.stats-section {
+    margin-bottom: 40px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+}
+
+.stat-card {
+    background-color: var(--bg-white);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 24px 16px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+}
+
+.stat-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+}
+
+.stat-value {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* ========== 功能卡片 ========== */
+.features-section {
+    margin-bottom: 40px;
+}
+
+.feature-card {
+    text-align: center;
+    padding: 32px 24px;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+}
+
+.feature-icon {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 20px;
+    padding: 20px;
+    background-color: var(--primary-light);
+    border-radius: 16px;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+}
+
+.feature-description {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+/* ========== 最近内容区域 ========== */
+.recent-section {
+    margin-bottom: 40px;
+}
+
+.recent-section .card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.recent-section .list-item {
+    padding: 16px 24px;
+}
+
+.recent-section .list-item:hover {
+    background-color: var(--primary-light);
+}
+
+.recent-section .list-item-title {
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+/* ========== 页脚链接 ========== */
+.footer-link {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: inherit;
+    padding: 0;
+    transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+    color: var(--error-color);
+}
+
+/* ========== 响应式布局 ========== */
+@media screen and (max-width: 1024px) {
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .hero {
+        padding: 48px 24px;
+    }
+
+    .hero-title {
+        font-size: 1.75rem;
+    }
+
+    .hero-description {
+        font-size: 1rem;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-actions .btn {
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stat-card {
+        padding: 20px 12px;
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 12px;
+    }
+
+    .stat-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .stat-value {
+        font-size: 1.75rem;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+    }
+
+    .feature-card {
+        padding: 24px 20px;
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        padding: 16px;
+    }
+
+    .recent-section .list-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    /* 让第5个统计卡片占满一行 */
+    .stat-card:nth-child(5) {
+        grid-column: 1 / -1;
+    }
+}

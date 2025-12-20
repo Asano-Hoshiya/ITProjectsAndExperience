@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="生词管理">
+    <title>生词管理</title>
+    <!-- 引入全局样式 -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/vocabulary.css">
+</head>
+<body>
+    <!-- ========== 导航栏 ========== -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <!-- Logo -->
+            <a href="index.html" class="navbar-logo">
+                <img src="images/logo.svg" alt="Logo">
+                <span>外语教材学习系统</span>
+            </a>
+
+            <!-- 移动端菜单按钮 -->
+            <button class="navbar-toggle" aria-label="切换菜单">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="navbar-center-logo">
+                <img src="images/Logo.png" alt="Center Logo">
+                <!-- 或者用占位符 -->
+                <!-- <div class="logo-placeholder">LOGO</div> -->
+            </div>
+
+            <!-- 导航菜单 -->
+            <ul class="navbar-menu">
+                <li><a href="index.html" class="navbar-link">首页</a></li>
+                <li><a href="textbooks.html" class="navbar-link">教材</a></li>
+                <li><a href="notes.html" class="navbar-link">笔记</a></li>
+                <li><a href="vocabulary.html" class="navbar-link active">生词</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ========== 主内容区域 ========== -->
+    <main class="main-content">
+        <!-- 页面标题 -->
+        <header class="page-header">
+            <h1 class="page-title">生词管理</h1>
+            <p class="page-subtitle">收集生词，记录释义，便于词汇积累复习</p>
+        </header>
+
+        <!-- 工具栏 -->
+        <div class="card mb-3">
+            <div class="toolbar">
+                <!-- 搜索框 -->
+                <div class="search-box">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="M21 21l-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" id="search-input" placeholder="搜索生词或释义...">
+                </div>
+
+                <!-- 添加按钮 -->
+                <button class="btn btn-primary" id="add-word-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    添加生词
+                </button>
+            </div>
+
+            <!-- 统计信息 -->
+            <div class="stats-bar" id="stats-bar">
+                <span>共 <strong id="total-count">0</strong> 个生词</span>
+                <span>今日新增 <strong id="today-count">0</strong> 个</span>
+            </div>
+        </div>
+
+        <!-- 生词列表 -->
+        <div id="word-list" class="card-grid">
+            <!-- 生词卡片将通过 JS 动态加载 -->
+        </div>
+
+        <!-- 空状态 -->
+        <div id="empty-state" class="empty-state card" style="display: none;">
+            <img src="images/empty-state.svg" alt="暂无数据">
+            <h3>暂无生词</h3>
+            <p>点击上方"添加生词"按钮，开始积累您的词汇库</p>
+            <button class="btn btn-primary" id="empty-add-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                添加第一个生词
+            </button>
+        </div>
+    </main>
+
+    <!-- ========== 添加/编辑生词模态框 ========== -->
+    <div class="modal-overlay" id="word-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">添加生词</h2>
+                <button class="modal-close" id="modal-close-btn" aria-label="关闭">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="word-form">
+                <div class="modal-body">
+                    <!-- 隐藏的 ID 字段 -->
+                    <input type="hidden" id="word-id">
+
+                    <!-- 生词输入 -->
+                    <div class="form-group">
+                        <label class="form-label" for="word-text">
+                            生词 <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-input" id="word-text"
+                               placeholder="请输入生词" required maxlength="100">
+                    </div>
+
+                    <!-- 音标输入 -->
+                    <div class="form-group">
+                        <label class="form-label" for="word-phonetic">
+                            音标
+                        </label>
+                        <input type="text" class="form-input" id="word-phonetic"
+                               placeholder="例如：/həˈloʊ/">
+                        <p class="form-hint">可选，输入国际音标或拼音</p>
+                    </div>
+
+                    <!-- 释义输入 -->
+                    <div class="form-group">
+                        <label class="form-label" for="word-definition">
+                            释义 <span class="required">*</span>
+                        </label>
+                        <textarea class="form-textarea" id="word-definition"
+                                  placeholder="请输入生词的释义" required maxlength="500"></textarea>
+                    </div>
+
+                    <!-- 例句输入 -->
+                    <div class="form-group">
+                        <label class="form-label" for="word-example">
+                            例句
+                        </label>
+                        <textarea class="form-textarea" id="word-example"
+                                  placeholder="请输入包含该生词的例句" maxlength="500"></textarea>
+                        <p class="form-hint">可选，输入一个包含该生词的例句便于理解记忆</p>
+                    </div>
+
+                    <!-- 关联课文选择 -->
+                    <div class="form-group">
+                        <label class="form-label" for="word-lesson">
+                            关联课文
+                        </label>
+                        <select class="form-input" id="word-lesson">
+                            <option value="">不关联课文</option>
+                            <!-- 课文选项将通过 JS 动态加载 -->
+                        </select>
+                        <p class="form-hint">可选，选择该生词来源的课文</p>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="modal-cancel-btn">取消</button>
+                    <button type="submit" class="btn btn-primary" id="modal-submit-btn">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========== 确认删除模态框 ========== -->
+    <div class="modal-overlay" id="confirm-modal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 class="modal-title">确认删除</h2>
+                <button class="modal-close" id="confirm-close-btn" aria-label="关闭">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message">确定要删除这个生词吗？此操作不可恢复。</p>
+                <input type="hidden" id="delete-word-id">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="confirm-cancel-btn">取消</button>
+                <button type="button" class="btn btn-primary" id="confirm-delete-btn"
+                        style="background-color: #ef4444;">删除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 页脚 ========== -->
+    <footer class="footer">
+        <p>© 2025 Asano Hoshiya | 数据存储于本地浏览器</p>
+    </footer>
+
+    <!-- 引入全局脚本 -->
+    <script src="js/main.js"></script>
+    <script src="js/vocabulary.js"></script>
+</body>
+</html>

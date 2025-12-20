@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="教材管理">
+    <title>教材管理</title>
+    <!-- 引入全局样式 -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/textbooks.css">
+</head>
+<body>
+    <!-- ========== 导航栏 ========== -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-logo">
+                <img src="images/logo.svg" alt="Logo">
+                <span>外语教材学习系统</span>
+            </a>
+
+            <button class="navbar-toggle" aria-label="切换菜单">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="navbar-center-logo">
+                <img src="images/Logo.png" alt="Center Logo">
+                <!-- 或者用占位符 -->
+                <!-- <div class="logo-placeholder">LOGO</div> -->
+            </div>
+
+            <ul class="navbar-menu">
+                <li><a href="index.html" class="navbar-link">首页</a></li>
+                <li><a href="textbooks.html" class="navbar-link active">教材</a></li>
+                <li><a href="notes.html" class="navbar-link">笔记</a></li>
+                <li><a href="vocabulary.html" class="navbar-link">生词</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ========== 主内容区域 ========== -->
+    <main class="main-content">
+        <!-- 页面标题 -->
+        <header class="page-header">
+            <h1 class="page-title">教材管理</h1>
+            <p class="page-subtitle">管理您的教材，点击教材进入查看课程和课文</p>
+        </header>
+
+        <!-- 工具栏 -->
+        <div class="card mb-3">
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <!-- 搜索框 -->
+                    <div class="search-box">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="M21 21l-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" id="search-input" placeholder="搜索教材名称...">
+                    </div>
+                </div>
+
+                <!-- 添加按钮 -->
+                <button class="btn btn-primary" id="add-textbook-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    添加教材
+                </button>
+            </div>
+
+            <!-- 统计信息 -->
+            <div class="stats-bar">
+                <span>共 <strong id="total-count">0</strong> 本教材</span>
+                <span>共 <strong id="course-count">0</strong> 个课程</span>
+                <span>共 <strong id="lesson-count">0</strong> 篇课文</span>
+            </div>
+        </div>
+
+        <!-- 教材列表 -->
+        <div id="textbook-list" class="card-grid">
+            <!-- 教材卡片将通过 JS 动态加载 -->
+        </div>
+
+        <!-- 空状态 -->
+        <div id="empty-state" class="empty-state card" style="display: none;">
+            <img src="images/empty-state.svg" alt="暂无数据">
+            <h3>暂无教材</h3>
+            <p>点击上方"添加教材"按钮，创建您的第一本教材</p>
+            <button class="btn btn-primary" id="empty-add-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                添加第一本教材
+            </button>
+        </div>
+    </main>
+
+    <!-- ========== 添加/编辑教材模态框 ========== -->
+    <div class="modal-overlay" id="textbook-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">添加教材</h2>
+                <button class="modal-close" id="modal-close-btn" aria-label="关闭">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="textbook-form">
+                <div class="modal-body">
+                    <input type="hidden" id="textbook-id">
+
+                    <!-- 教材名称 -->
+                    <div class="form-group">
+                        <label class="form-label" for="textbook-name">
+                            教材名称 <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-input" id="textbook-name"
+                               placeholder="例如：新概念英语第一册" required maxlength="100">
+                    </div>
+
+                    <!-- 教材描述 -->
+                    <div class="form-group">
+                        <label class="form-label" for="textbook-description">
+                            教材描述
+                        </label>
+                        <textarea class="form-textarea" id="textbook-description"
+                                  placeholder="请输入教材的简要描述..." maxlength="500"
+                                  style="min-height: 100px;"></textarea>
+                        <p class="form-hint">可选，简要描述教材内容或用途</p>
+                    </div>
+
+                    <!-- 封面颜色选择 -->
+                    <div class="form-group">
+                        <label class="form-label">封面颜色</label>
+                        <div class="color-picker" id="color-picker">
+                            <button type="button" class="color-option active" data-color="#2563eb" style="background-color: #2563eb;"></button>
+                            <button type="button" class="color-option" data-color="#10b981" style="background-color: #10b981;"></button>
+                            <button type="button" class="color-option" data-color="#f59e0b" style="background-color: #f59e0b;"></button>
+                            <button type="button" class="color-option" data-color="#ef4444" style="background-color: #ef4444;"></button>
+                            <button type="button" class="color-option" data-color="#8b5cf6" style="background-color: #8b5cf6;"></button>
+                            <button type="button" class="color-option" data-color="#ec4899" style="background-color: #ec4899;"></button>
+                            <button type="button" class="color-option" data-color="#06b6d4" style="background-color: #06b6d4;"></button>
+                            <button type="button" class="color-option" data-color="#64748b" style="background-color: #64748b;"></button>
+                        </div>
+                        <input type="hidden" id="textbook-color" value="#2563eb">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="modal-cancel-btn">取消</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========== 确认删除模态框 ========== -->
+    <div class="modal-overlay" id="confirm-modal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 class="modal-title">确认删除</h2>
+                <button class="modal-close" id="confirm-close-btn" aria-label="关闭">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message">确定要删除这本教材吗？</p>
+                <p class="text-error mt-2" style="font-size: 0.875rem;">
+                    ⚠️ 删除教材将同时删除该教材下的所有课程和课文，此操作不可恢复！
+                </p>
+                <input type="hidden" id="delete-textbook-id">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="confirm-cancel-btn">取消</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-btn">确认删除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 页脚 ========== -->
+    <footer class="footer">
+        <p>© 2025 Asano Hoshiya | 数据存储于本地浏览器</p>
+    </footer>
+
+    <!-- 引入全局脚本 -->
+    <script src="js/main.js"></script>
+    <script src="js/textbooks.js"></script>
+</body>
+</html>

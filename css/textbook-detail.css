@@ -1,0 +1,77 @@
+/* 教材信息区域 */
+.textbook-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.textbook-info-main {
+    flex: 1;
+}
+
+.textbook-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.textbook-stats .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* 课程序号 */
+.course-number {
+    width: 28px;
+    height: 28px;
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+    flex-shrink: 0;
+}
+
+/* 颜色选择器 */
+.color-picker {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.color-option {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.color-option:hover {
+    transform: scale(1.1);
+}
+
+.color-option.active {
+    border-color: var(--text-primary);
+    box-shadow: 0 0 0 2px var(--bg-white);
+}
+
+@media screen and (max-width: 768px) {
+    .textbook-info {
+        flex-direction: column;
+    }
+
+    .textbook-info-actions {
+        width: 100%;
+    }
+
+    .textbook-info-actions .btn {
+        width: 100%;
+    }
+}

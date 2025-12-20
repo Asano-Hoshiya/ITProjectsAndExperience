@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="笔记管理">
+    <title>笔记管理</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/notes.css">
+</head>
+<body>
+    <!-- ========== 导航栏 ========== -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <!-- Logo -->
+            <a href="index.html" class="navbar-logo">
+                <img src="images/logo.svg" alt="Logo">
+                <span>外语教材学习系统</span>
+            </a>
+
+            <!-- 移动端菜单按钮 -->
+            <button class="navbar-toggle" aria-label="切换菜单">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="navbar-center-logo">
+                <img src="images/Logo.png" alt="Center Logo">
+                <!-- 或者用占位符 -->
+                <!-- <div class="logo-placeholder">LOGO</div> -->
+            </div>
+
+            <!-- 导航菜单 -->
+            <ul class="navbar-menu">
+                <li><a href="index.html" class="navbar-link">首页</a></li>
+                <li><a href="textbooks.html" class="navbar-link">教材</a></li>
+                <li><a href="notes.html" class="navbar-link active">笔记</a></li>
+                <li><a href="vocabulary.html" class="navbar-link">生词</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ========== 主内容区域 ========== -->
+    <main class="main-content">
+        <!-- 页面标题 -->
+        <header class="page-header">
+            <h1 class="page-title">笔记管理</h1>
+            <p class="page-subtitle">记录学习心得，关联课文便于复习整理</p>
+        </header>
+
+        <!-- 工具栏 -->
+        <div class="card mb-3">
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <!-- 搜索框 -->
+                    <div class="search-box">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="M21 21l-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" id="search-input" placeholder="搜索笔记标题或内容...">
+                    </div>
+
+                    <!-- 教材筛选 -->
+                    <select class="filter-select" id="filter-textbook">
+                        <option value="">所有教材</option>
+                    </select>
+
+                    <!-- 课文筛选 -->
+                    <select class="filter-select" id="filter-lesson">
+                        <option value="">所有课文</option>
+                    </select>
+                </div>
+
+                <!-- 添加按钮 -->
+                <button class="btn btn-primary" id="add-note-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    添加笔记
+                </button>
+            </div>
+
+            <!-- 统计信息 -->
+            <div class="stats-bar" id="stats-bar">
+                <span>共 <strong id="total-count">0</strong> 条笔记</span>
+                <span>本周新增 <strong id="week-count">0</strong> 条</span>
+            </div>
+        </div>
+
+        <!-- 笔记列表 -->
+        <div id="note-list" class="card-grid">
+            <!-- 笔记卡片将通过 JS 动态加载 -->
+        </div>
+
+        <!-- 空状态 -->
+        <div id="empty-state" class="empty-state card" style="display: none;">
+            <img src="images/empty-state.svg" alt="暂无数据">
+            <h3>暂无笔记</h3>
+            <p>点击上方"添加笔记"按钮，开始记录您的学习心得</p>
+            <button class="btn btn-primary" id="empty-add-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                添加第一条笔记
+            </button>
+        </div>
+    </main>
+
+    <!-- ========== 添加/编辑笔记模态框 ========== -->
+    <div class="modal-overlay" id="note-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">添加笔记</h2>
+                <button class="modal-close" id="modal-close-btn" aria-label="关闭">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="note-form">
+                <div class="modal-body">
+                    <!-- 隐藏的 ID 字段 -->
+                    <input type="hidden" id="note-id">
+
+                    <!-- 笔记标题 -->
+                    <div class="form-group">
+                        <label class="form-label" for="note-title">
+                            标题 <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-input" id="note-title"
+                               placeholder="请输入笔记标题" required maxlength="100">
+                    </div>
+
+                    <!-- 关联教材选择 -->
+                    <div class="form-group">
+                        <label class="form-label" for="note-textbook">
+                            关联教材
+                        </label>
+                        <select class="form-select" id="note-textbook">
+                            <option value="">不关联教材</option>
+                        </select>
+                    </div>
+
+                    <!-- 关联课文选择 -->
+                    <div class="form-group">
+                        <label class="form-label" for="note-lesson">
+                            关联课文
+                        </label>
+                        <select class="form-select" id="note-lesson">
+                            <option value="">不关联课文</option>
+                        </select>
+                        <p class="form-hint">可选，先选择教材后可选择该教材下的课文</p>
+                    </div>
+
+                    <!-- 笔记内容 -->
+                    <div class="form-group">
+                        <label class="form-label" for="note-content">
+                            内容 <span class="required">*</span>
+                        </label>
+                        <textarea class="form-textarea" id="note-content"
+                                  placeholder="请输入笔记内容..." required maxlength="5000"></textarea>
+                        <p class="form-hint">支持多行文本，最多 5000 字</p>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="modal-cancel-btn">取消</button>
+                    <button type="submit" class="btn btn-primary" id="modal-submit-btn">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========== 查看笔记模态框 ========== -->
+    <div class="modal-overlay view-modal" id="view-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="view-title">笔记详情</h2>
+                <button class="modal-close" id="view-close-btn" aria-label="关闭">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="view-note-content" id="view-content"></div>
+                <div class="view-note-info" id="view-info"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="view-edit-btn">编辑</button>
+                <button type="button" class="btn btn-primary" id="view-ok-btn">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 确认删除模态框 ========== -->
+    <div class="modal-overlay" id="confirm-modal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 class="modal-title">确认删除</h2>
+                <button class="modal-close" id="confirm-close-btn" aria-label="关闭">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message">确定要删除这条笔记吗？此操作不可恢复。</p>
+                <input type="hidden" id="delete-note-id">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="confirm-cancel-btn">取消</button>
+                <button type="button" class="btn btn-primary" id="confirm-delete-btn"
+                        style="background-color: #ef4444;">删除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 页脚 ========== -->
+    <footer class="footer">
+        <p>© 2025 Asano Hoshiya | 数据存储于本地浏览器</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/notes.js"></script>
+</body>
+</html>

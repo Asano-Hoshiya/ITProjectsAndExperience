@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="课文编辑">
+    <title>课文编辑</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/lesson-edit.css">
+</head>
+<body>
+    <!-- ========== 导航栏 ========== -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-logo">
+                <img src="images/logo.svg" alt="Logo">
+                <span>外语教材学习系统</span>
+            </a>
+
+            <button class="navbar-toggle" aria-label="切换菜单">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="navbar-center-logo">
+                <img src="images/Logo.png" alt="Center Logo">
+                <!-- 或者用占位符 -->
+                <!-- <div class="logo-placeholder">LOGO</div> -->
+            </div>
+
+            <ul class="navbar-menu">
+                <li><a href="index.html" class="navbar-link">首页</a></li>
+                <li><a href="textbooks.html" class="navbar-link active">教材</a></li>
+                <li><a href="notes.html" class="navbar-link">笔记</a></li>
+                <li><a href="vocabulary.html" class="navbar-link">生词</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ========== 主内容区域 ========== -->
+    <main class="main-content">
+        <!-- 面包屑导航 -->
+        <nav class="breadcrumb">
+            <a href="index.html">首页</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="textbooks.html">教材管理</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="#" id="breadcrumb-textbook">教材</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="#" id="breadcrumb-course">课程</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-current" id="breadcrumb-current">新建课文</span>
+        </nav>
+
+        <!-- 编辑区域容器 -->
+        <div class="lesson-editor-container">
+            <!-- 左侧：编辑器主体 -->
+            <div class="editor-main">
+                <!-- 基本信息卡片 -->
+                <div class="card mb-3">
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 2;">
+                            <label class="form-label" for="lesson-title">
+                                课文标题 <span class="required">*</span>
+                            </label>
+                            <input type="text" class="form-input" id="lesson-title"
+                                   placeholder="请输入课文标题" required maxlength="100">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label class="form-label" for="lesson-order">排序序号</label>
+                            <input type="number" class="form-input" id="lesson-order"
+                                   placeholder="可选" min="0" max="9999">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== 对话式编辑器 ==================== -->
+                <div class="card editor-card" id="dialogue-editor" style="display: none;">
+                    <div class="editor-header">
+                        <h3>对话内容</h3>
+                        <span class="tag tag-primary">对话式</span>
+                    </div>
+
+                    <!-- 角色管理区域 -->
+                    <div class="dialogue-speakers">
+                        <div class="speakers-header">
+                            <label class="form-label">对话角色</label>
+                            <button type="button" class="btn btn-secondary btn-sm" id="add-speaker-btn">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                添加角色
+                            </button>
+                        </div>
+                        <div class="speaker-list" id="speaker-list">
+                            <!-- 角色卡片动态生成 -->
+                        </div>
+                    </div>
+
+                    <!-- 对话预览区域 -->
+                    <div class="dialogue-preview-container">
+                        <label class="form-label">对话预览</label>
+                        <div class="dialogue-preview" id="dialogue-preview">
+                            <div class="dialogue-empty">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                                <p>暂无对话内容</p>
+                                <span>在下方选择角色并输入对话</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 对话输入区域 -->
+                    <div class="dialogue-input-area">
+                        <div class="dialogue-input-row">
+                            <select class="form-select" id="current-speaker">
+                                <option value="">选择角色</option>
+                            </select>
+                            <select class="form-select" id="current-position">
+                                <option value="left">居左</option>
+                                <option value="right">居右</option>
+                            </select>
+                            <div class="dialogue-input-wrapper">
+                                <textarea id="dialogue-input"
+                                          placeholder="输入对话内容，Enter 发送，Shift+Enter 换行，选中文本按 Ctrl+1~9 添加替换标记"
+                                          rows="1"></textarea>
+                                <button type="button" class="mark-replaceable-btn" id="mark-replaceable-btn" title="标记选中文本为可替换 (Ctrl+1~9)">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M4 7V4h16v3"></path>
+                                        <path d="M9 20h6"></path>
+                                        <path d="M12 4v16"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <button type="button" class="btn btn-primary" id="send-dialogue-btn">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="input-hint" id="dialogue-input-hint" style="display: none;">
+                            <span class="hint-tag">当前标记: <strong id="current-mark-count">0</strong> 个</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== 整体式编辑器（富文本） ==================== -->
+                <div class="card editor-card" id="article-editor" style="display: none;">
+                    <div class="editor-header">
+                        <h3>课文内容</h3>
+                        <span class="tag tag-success">整体式</span>
+                    </div>
+
+                    <!-- 富文本编辑器 -->
+                    <div class="richtext-editor" id="richtext-editor">
+                        <!-- 工具栏 -->
+                        <div class="richtext-toolbar">
+                            <!-- 字体选择 -->
+                            <select class="toolbar-select" id="font-family" title="字体">
+                                <option value="inherit">默认字体</option>
+                                <option value="SimSun, serif">宋体</option>
+                                <option value="SimHei, sans-serif">黑体</option>
+                                <option value="Microsoft YaHei, sans-serif">微软雅黑</option>
+                                <option value="KaiTi, serif">楷体</option>
+                                <option value="Arial, sans-serif">Arial</option>
+                                <option value="Times New Roman, serif">Times New Roman</option>
+                                <option value="Georgia, serif">Georgia</option>
+                            </select>
+
+                            <!-- 字号选择 -->
+                            <select class="toolbar-select" id="font-size" title="字号">
+                                <option value="12px">12px</option>
+                                <option value="14px">14px</option>
+                                <option value="16px" selected>16px</option>
+                                <option value="18px">18px</option>
+                                <option value="20px">20px</option>
+                                <option value="24px">24px</option>
+                                <option value="28px">28px</option>
+                                <option value="32px">32px</option>
+                                <option value="36px">36px</option>
+                            </select>
+
+                            <!-- 行距选择 -->
+                            <select class="toolbar-select" id="line-height" title="行距">
+                                <option value="1">1.0</option>
+                                <option value="1.5">1.5</option>
+                                <option value="1.8" selected>1.8</option>
+                                <option value="2">2.0</option>
+                                <option value="2.5">2.5</option>
+                                <option value="3">3.0</option>
+                            </select>
+
+                            <span class="toolbar-separator"></span>
+
+                            <!-- 文字颜色 -->
+                            <div class="toolbar-color-group">
+                                <button type="button" class="toolbar-btn color-apply-btn" id="text-color-apply-btn" title="文字颜色">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M4 20h16"></path>
+                                        <path d="M9.5 4h5L18 16H6L9.5 4z"></path>
+                                    </svg>
+                                    <span class="color-bar" id="text-color-bar" style="background-color: #000000;"></span>
+                                </button>
+                                <button type="button" class="toolbar-btn color-picker-btn" id="text-color-picker-btn" title="选择文字颜色">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </button>
+                                <input type="color" id="text-color-input" value="#000000" style="display: none;">
+                            </div>
+
+                            <!-- 背景颜色 -->
+                            <div class="toolbar-color-group">
+                                <button type="button" class="toolbar-btn color-apply-btn" id="bg-color-apply-btn" title="背景颜色">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                                    </svg>
+                                    <span class="color-bar" id="bg-color-bar" style="background-color: #ffff00;"></span>
+                                </button>
+                                <button type="button" class="toolbar-btn color-picker-btn" id="bg-color-picker-btn" title="选择背景颜色">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </button>
+                                <input type="color" id="bg-color-input" value="#ffff00" style="display: none;">
+                            </div>
+
+                            <span class="toolbar-separator"></span>
+
+                            <!-- 格式按钮 -->
+                            <button type="button" class="toolbar-btn" data-command="bold" title="粗体 (Ctrl+B)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path>
+                                    <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path>
+                                </svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-command="italic" title="斜体 (Ctrl+I)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="19" y1="4" x2="10" y2="4"></line>
+                                    <line x1="14" y1="20" x2="5" y2="20"></line>
+                                    <line x1="15" y1="4" x2="9" y2="20"></line>
+                                </svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-command="underline" title="下划线 (Ctrl+U)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3"></path>
+                                    <line x1="4" y1="21" x2="20" y2="21"></line>
+                                </svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-command="strikeThrough" title="删除线">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17.3 4.9c-2.3-.6-4.4-1-6.2-.9-2.7 0-5.3.7-5.3 3.6 0 1.5 1.8 3.3 3.6 3.9h.2"></path>
+                                    <path d="M8.5 15c0 2.2 2.2 3.5 5 3.5 2.2 0 4.3-.5 5.8-1.5"></path>
+                                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                                </svg>
+                            </button>
+
+                            <span class="toolbar-separator"></span>
+
+                            <!-- 段落格式 -->
+                            <select class="toolbar-select" id="format-block" title="段落格式">
+                                <option value="p">正文</option>
+                                <option value="h1">标题 1</option>
+                                <option value="h2">标题 2</option>
+                                <option value="h3">标题 3</option>
+                                <option value="h4">标题 4</option>
+                                <option value="blockquote">引用</option>
+                            </select>
+
+                            <span class="toolbar-separator"></span>
+
+                            <!-- 列表 -->
+                            <button type="button" class="toolbar-btn" data-command="insertUnorderedList" title="无序列表">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                                    <circle cx="4" cy="6" r="1" fill="currentColor"></circle>
+                                    <circle cx="4" cy="12" r="1" fill="currentColor"></circle>
+                                    <circle cx="4" cy="18" r="1" fill="currentColor"></circle>
+                                </svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-command="insertOrderedList" title="有序列表">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="10" y1="6" x2="21" y2="6"></line>
+                                    <line x1="10" y1="12" x2="21" y2="12"></line>
+                                    <line x1="10" y1="18" x2="21" y2="18"></line>
+                                    <text x="4" y="8" font-size="8" fill="currentColor">1</text>
+                                    <text x="4" y="14" font-size="8" fill="currentColor">2</text>
+                                    <text x="4" y="20" font-size="8" fill="currentColor">3</text>
+                                </svg>
+                            </button>
+
+                            <span class="toolbar-separator"></span>
+
+                            <!-- 对齐 -->
+                            <button type="button" class="toolbar-btn" data-command="justifyLeft" title="左对齐">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="17" y1="10" x2="3" y2="10"></line>
+                                    <line x1="21" y1="6" x2="3" y2="6"></line>
+                                    <line x1="21" y1="14" x2="3" y2="14"></line>
+                                    <line x1="17" y1="18" x2="3" y2="18"></line>
+                                </svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-command="justifyCenter" title="居中对齐">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="10" x2="6" y2="10"></line>
+                                    <line x1="21" y1="6" x2="3" y2="6"></line>
+                                    <line x1="21" y1="14" x2="3" y2="14"></line>
+                                    <line x1="18" y1="18" x2="6" y2="18"></line>
+                                </svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-command="justifyRight" title="右对齐">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="21" y1="10" x2="7" y2="10"></line>
+                                    <line x1="21" y1="6" x2="3" y2="6"></line>
+                                    <line x1="21" y1="14" x2="3" y2="14"></line>
+                                    <line x1="21" y1="18" x2="7" y2="18"></line>
+                                </svg>
+                            </button>
+
+                            <span class="toolbar-separator"></span>
+
+                            <!-- 缩进 -->
+                            <button type="button" class="toolbar-btn" data-command="outdent" title="减少缩进">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="7 8 3 12 7 16"></polyline>
+                                    <line x1="21" y1="12" x2="11" y2="12"></line>
+                                    <line x1="21" y1="6" x2="11" y2="6"></line>
+                                    <line x1="21" y1="18" x2="11" y2="18"></line>
+                                </svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-command="indent" title="增加缩进">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 8 7 12 3 16"></polyline>
+                                    <line x1="21" y1="12" x2="11" y2="12"></line>
+                                    <line x1="21" y1="6" x2="11" y2="6"></line>
+                                    <line x1="21" y1="18" x2="11" y2="18"></line>
+                                </svg>
+                            </button>
+
+                            <span class="toolbar-separator"></span>
+
+                            <!-- 插入媒体 -->
+                            <button type="button" class="toolbar-btn" id="insert-image-btn" title="插入图片">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" id="insert-video-btn" title="插入视频">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                                </svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" id="insert-audio-btn" title="插入音频">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 18V5l12-2v13"></path>
+                                    <circle cx="6" cy="18" r="3"></circle>
+                                    <circle cx="18" cy="16" r="3"></circle>
+                                </svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" id="insert-link-btn" title="插入链接">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                                </svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" id="insert-table-btn" title="插入表格">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                                    <line x1="3" y1="15" x2="21" y2="15"></line>
+                                    <line x1="9" y1="3" x2="9" y2="21"></line>
+                                    <line x1="15" y1="3" x2="15" y2="21"></line>
+                                </svg>
+                            </button>
+
+                            <span class="toolbar-separator"></span>
+
+                            <!-- 撤销重做 -->
+                            <button type="button" class="toolbar-btn" data-command="undo" title="撤销 (Ctrl+Z)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="1 4 1 10 7 10"></polyline>
+                                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                                </svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-command="redo" title="重做 (Ctrl+Y)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="23 4 23 10 17 10"></polyline>
+                                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                                </svg>
+                            </button>
+
+                            <span class="toolbar-separator"></span>
+
+                            <!-- 清除格式 -->
+                            <button type="button" class="toolbar-btn" data-command="removeFormat" title="清除格式">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 7V4h16v3"></path>
+                                    <path d="M9 20h6"></path>
+                                    <path d="M12 4v16"></path>
+                                    <line x1="2" y1="2" x2="22" y2="22" stroke-width="2"></line>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- 编辑区域 -->
+                        <div class="richtext-content-wrapper" id="richtext-content-wrapper">
+                            <div class="richtext-content" id="richtext-content" contenteditable="true">
+                                <p>在此输入课文内容...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ========== 自定义颜色选择器 ========== -->
+                    <div class="color-picker-popup" id="text-color-picker-popup" style="display: none;">
+                        <div class="color-picker-header">
+                            <span>文字颜色</span>
+                            <button type="button" class="color-picker-close" id="text-color-picker-close">×</button>
+                        </div>
+                        <div class="color-picker-body">
+                            <!-- 预设颜色 -->
+                            <div class="color-preset-grid">
+                                <button type="button" class="color-preset" data-color="#000000" style="background-color: #000000;" title="黑色"></button>
+                                <button type="button" class="color-preset" data-color="#434343" style="background-color: #434343;" title="深灰"></button>
+                                <button type="button" class="color-preset" data-color="#666666" style="background-color: #666666;" title="灰色"></button>
+                                <button type="button" class="color-preset" data-color="#999999" style="background-color: #999999;" title="浅灰"></button>
+                                <button type="button" class="color-preset" data-color="#b7b7b7" style="background-color: #b7b7b7;" title="更浅灰"></button>
+                                <button type="button" class="color-preset" data-color="#cccccc" style="background-color: #cccccc;" title="浅灰2"></button>
+                                <button type="button" class="color-preset" data-color="#d9d9d9" style="background-color: #d9d9d9;" title="浅灰3"></button>
+                                <button type="button" class="color-preset" data-color="#efefef" style="background-color: #efefef;" title="极浅灰"></button>
+                                <button type="button" class="color-preset" data-color="#f3f3f3" style="background-color: #f3f3f3;" title="几乎白"></button>
+                                <button type="button" class="color-preset" data-color="#ffffff" style="background-color: #ffffff; border: 1px solid #ddd;" title="白色"></button>
+
+                                <button type="button" class="color-preset" data-color="#ff0000" style="background-color: #ff0000;" title="红色"></button>
+                                <button type="button" class="color-preset" data-color="#ff9900" style="background-color: #ff9900;" title="橙色"></button>
+                                <button type="button" class="color-preset" data-color="#ffff00" style="background-color: #ffff00;" title="黄色"></button>
+                                <button type="button" class="color-preset" data-color="#00ff00" style="background-color: #00ff00;" title="绿色"></button>
+                                <button type="button" class="color-preset" data-color="#00ffff" style="background-color: #00ffff;" title="青色"></button>
+                                <button type="button" class="color-preset" data-color="#0000ff" style="background-color: #0000ff;" title="蓝色"></button>
+                                <button type="button" class="color-preset" data-color="#9900ff" style="background-color: #9900ff;" title="紫色"></button>
+                                <button type="button" class="color-preset" data-color="#ff00ff" style="background-color: #ff00ff;" title="品红"></button>
+
+                                <button type="button" class="color-preset" data-color="#f4cccc" style="background-color: #f4cccc;" title="浅红"></button>
+                                <button type="button" class="color-preset" data-color="#fce5cd" style="background-color: #fce5cd;" title="浅橙"></button>
+                                <button type="button" class="color-preset" data-color="#fff2cc" style="background-color: #fff2cc;" title="浅黄"></button>
+                                <button type="button" class="color-preset" data-color="#d9ead3" style="background-color: #d9ead3;" title="浅绿"></button>
+                                <button type="button" class="color-preset" data-color="#d0e0e3" style="background-color: #d0e0e3;" title="浅青"></button>
+                                <button type="button" class="color-preset" data-color="#c9daf8" style="background-color: #c9daf8;" title="浅蓝"></button>
+                                <button type="button" class="color-preset" data-color="#d9d2e9" style="background-color: #d9d2e9;" title="浅紫"></button>
+                                <button type="button" class="color-preset" data-color="#ead1dc" style="background-color: #ead1dc;" title="浅粉"></button>
+
+                                <button type="button" class="color-preset" data-color="#ea9999" style="background-color: #ea9999;" title="红"></button>
+                                <button type="button" class="color-preset" data-color="#f9cb9c" style="background-color: #f9cb9c;" title="橙"></button>
+                                <button type="button" class="color-preset" data-color="#ffe599" style="background-color: #ffe599;" title="黄"></button>
+                                <button type="button" class="color-preset" data-color="#b6d7a8" style="background-color: #b6d7a8;" title="绿"></button>
+                                <button type="button" class="color-preset" data-color="#a2c4c9" style="background-color: #a2c4c9;" title="青"></button>
+                                <button type="button" class="color-preset" data-color="#a4c2f4" style="background-color: #a4c2f4;" title="蓝"></button>
+                                <button type="button" class="color-preset" data-color="#b4a7d6" style="background-color: #b4a7d6;" title="紫"></button>
+                                <button type="button" class="color-preset" data-color="#d5a6bd" style="background-color: #d5a6bd;" title="粉"></button>
+
+                                <button type="button" class="color-preset" data-color="#e06666" style="background-color: #e06666;" title="深红"></button>
+                                <button type="button" class="color-preset" data-color="#f6b26b" style="background-color: #f6b26b;" title="深橙"></button>
+                                <button type="button" class="color-preset" data-color="#ffd966" style="background-color: #ffd966;" title="深黄"></button>
+                                <button type="button" class="color-preset" data-color="#93c47d" style="background-color: #93c47d;" title="深绿"></button>
+                                <button type="button" class="color-preset" data-color="#76a5af" style="background-color: #76a5af;" title="深青"></button>
+                                <button type="button" class="color-preset" data-color="#6d9eeb" style="background-color: #6d9eeb;" title="深蓝"></button>
+                                <button type="button" class="color-preset" data-color="#8e7cc3" style="background-color: #8e7cc3;" title="深紫"></button>
+                                <button type="button" class="color-preset" data-color="#c27ba0" style="background-color: #c27ba0;" title="深粉"></button>
+                            </div>
+
+                            <!-- 自定义颜色 -->
+                            <div class="color-custom">
+                                <label class="color-custom-label">
+                                    <span>自定义颜色：</span>
+                                    <input type="color" id="text-color-custom-input" value="#000000">
+                                </label>
+                                <div class="color-preview" id="text-color-preview" style="background-color: #000000;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="color-picker-popup" id="bg-color-picker-popup" style="display: none;">
+                        <div class="color-picker-header">
+                            <span>背景颜色</span>
+                            <button type="button" class="color-picker-close" id="bg-color-picker-close">×</button>
+                        </div>
+                        <div class="color-picker-body">
+                            <!-- 预设颜色 -->
+                            <div class="color-preset-grid">
+                                <button type="button" class="color-preset" data-color="#000000" style="background-color: #000000;" title="黑色"></button>
+                                <button type="button" class="color-preset" data-color="#434343" style="background-color: #434343;" title="深灰"></button>
+                                <button type="button" class="color-preset" data-color="#666666" style="background-color: #666666;" title="灰色"></button>
+                                <button type="button" class="color-preset" data-color="#999999" style="background-color: #999999;" title="浅灰"></button>
+                                <button type="button" class="color-preset" data-color="#b7b7b7" style="background-color: #b7b7b7;" title="更浅灰"></button>
+                                <button type="button" class="color-preset" data-color="#cccccc" style="background-color: #cccccc;" title="浅灰2"></button>
+                                <button type="button" class="color-preset" data-color="#d9d9d9" style="background-color: #d9d9d9;" title="浅灰3"></button>
+                                <button type="button" class="color-preset" data-color="#efefef" style="background-color: #efefef;" title="极浅灰"></button>
+                                <button type="button" class="color-preset" data-color="#f3f3f3" style="background-color: #f3f3f3;" title="几乎白"></button>
+                                <button type="button" class="color-preset" data-color="#ffffff" style="background-color: #ffffff; border: 1px solid #ddd;" title="白色"></button>
+
+                                <button type="button" class="color-preset" data-color="#ff0000" style="background-color: #ff0000;" title="红色"></button>
+                                <button type="button" class="color-preset" data-color="#ff9900" style="background-color: #ff9900;" title="橙色"></button>
+                                <button type="button" class="color-preset" data-color="#ffff00" style="background-color: #ffff00;" title="黄色"></button>
+                                <button type="button" class="color-preset" data-color="#00ff00" style="background-color: #00ff00;" title="绿色"></button>
+                                <button type="button" class="color-preset" data-color="#00ffff" style="background-color: #00ffff;" title="青色"></button>
+                                <button type="button" class="color-preset" data-color="#0000ff" style="background-color: #0000ff;" title="蓝色"></button>
+                                <button type="button" class="color-preset" data-color="#9900ff" style="background-color: #9900ff;" title="紫色"></button>
+                                <button type="button" class="color-preset" data-color="#ff00ff" style="background-color: #ff00ff;" title="品红"></button>
+
+                                <button type="button" class="color-preset" data-color="#f4cccc" style="background-color: #f4cccc;" title="浅红"></button>
+                                <button type="button" class="color-preset" data-color="#fce5cd" style="background-color: #fce5cd;" title="浅橙"></button>
+                                <button type="button" class="color-preset" data-color="#fff2cc" style="background-color: #fff2cc;" title="浅黄"></button>
+                                <button type="button" class="color-preset" data-color="#d9ead3" style="background-color: #d9ead3;" title="浅绿"></button>
+                                <button type="button" class="color-preset" data-color="#d0e0e3" style="background-color: #d0e0e3;" title="浅青"></button>
+                                <button type="button" class="color-preset" data-color="#c9daf8" style="background-color: #c9daf8;" title="浅蓝"></button>
+                                <button type="button" class="color-preset" data-color="#d9d2e9" style="background-color: #d9d2e9;" title="浅紫"></button>
+                                <button type="button" class="color-preset" data-color="#ead1dc" style="background-color: #ead1dc;" title="浅粉"></button>
+
+                                <button type="button" class="color-preset" data-color="#ea9999" style="background-color: #ea9999;" title="红"></button>
+                                <button type="button" class="color-preset" data-color="#f9cb9c" style="background-color: #f9cb9c;" title="橙"></button>
+                                <button type="button" class="color-preset" data-color="#ffe599" style="background-color: #ffe599;" title="黄"></button>
+                                <button type="button" class="color-preset" data-color="#b6d7a8" style="background-color: #b6d7a8;" title="绿"></button>
+                                <button type="button" class="color-preset" data-color="#a2c4c9" style="background-color: #a2c4c9;" title="青"></button>
+                                <button type="button" class="color-preset" data-color="#a4c2f4" style="background-color: #a4c2f4;" title="蓝"></button>
+                                <button type="button" class="color-preset" data-color="#b4a7d6" style="background-color: #b4a7d6;" title="紫"></button>
+                                <button type="button" class="color-preset" data-color="#d5a6bd" style="background-color: #d5a6bd;" title="粉"></button>
+
+                                <button type="button" class="color-preset" data-color="#e06666" style="background-color: #e06666;" title="深红"></button>
+                                <button type="button" class="color-preset" data-color="#f6b26b" style="background-color: #f6b26b;" title="深橙"></button>
+                                <button type="button" class="color-preset" data-color="#ffd966" style="background-color: #ffd966;" title="深黄"></button>
+                                <button type="button" class="color-preset" data-color="#93c47d" style="background-color: #93c47d;" title="深绿"></button>
+                                <button type="button" class="color-preset" data-color="#76a5af" style="background-color: #76a5af;" title="深青"></button>
+                                <button type="button" class="color-preset" data-color="#6d9eeb" style="background-color: #6d9eeb;" title="深蓝"></button>
+                                <button type="button" class="color-preset" data-color="#8e7cc3" style="background-color: #8e7cc3;" title="深紫"></button>
+                                <button type="button" class="color-preset" data-color="#c27ba0" style="background-color: #c27ba0;" title="深粉"></button>
+                            </div>
+
+                            <!-- 自定义颜色 -->
+                            <div class="color-custom">
+                                <label class="color-custom-label">
+                                    <span>自定义颜色：</span>
+                                    <input type="color" id="bg-color-custom-input" value="#ffff00">
+                                </label>
+                                <div class="color-preview" id="bg-color-preview" style="background-color: #ffff00;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="editor-actions">
+                    <button type="button" class="btn btn-secondary" id="cancel-btn">取消</button>
+                    <button type="button" class="btn btn-primary" id="save-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
+                        保存课文
+                    </button>
+                </div>
+            </div>
+
+            <!-- 右侧：信息面板和笔记栏 -->
+            <div class="editor-sidebar">
+                <!-- 课文信息 -->
+                <div class="card sidebar-card">
+                    <h3 class="sidebar-title">课文信息</h3>
+                    <div class="info-item">
+                        <span class="info-label">所属教材</span>
+                        <span class="info-value" id="info-textbook">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">所属课程</span>
+                        <span class="info-value" id="info-course">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">课文类型</span>
+                        <span class="info-value" id="info-type">-</span>
+                    </div>
+                    <div class="info-item" id="info-created-row" style="display: none;">
+                        <span class="info-label">创建时间</span>
+                        <span class="info-value" id="info-created">-</span>
+                    </div>
+                </div>
+
+                <!-- 统计信息 -->
+                <div class="card sidebar-card mt-2" id="dialogue-stats" style="display: none;">
+                    <h3 class="sidebar-title">对话统计</h3>
+                    <div class="info-item">
+                        <span class="info-label">对话条数</span>
+                        <span class="info-value" id="dialogue-count">0</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">角色数量</span>
+                        <span class="info-value" id="speaker-count">0</span>
+                    </div>
+                </div>
+
+                <div class="card sidebar-card mt-2" id="article-stats" style="display: none;">
+                    <h3 class="sidebar-title">文章统计</h3>
+                    <div class="info-item">
+                        <span class="info-label">字数统计</span>
+                        <span class="info-value" id="word-count">0</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">段落数量</span>
+                        <span class="info-value" id="paragraph-count">0</span>
+                    </div>
+                </div>
+
+                <!-- 笔记栏 -->
+                <div class="card sidebar-card mt-2">
+                    <div class="sidebar-title-row">
+                        <h3 class="sidebar-title" style="margin-bottom: 0;">课文笔记</h3>
+                        <span class="note-count-badge" id="note-count-badge">0</span>
+                    </div>
+                    <p class="sidebar-hint">选中课文内容可添加笔记或生词</p>
+                    <div class="notes-list" id="notes-list">
+                        <!-- 笔记动态生成 -->
+                    </div>
+                    <div class="notes-empty" id="notes-empty">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        <span>暂无笔记</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 笔记连接线 SVG -->
+        <svg class="note-connector-svg" id="note-connector-svg">
+            <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7" fill="var(--primary-color)" opacity="0.6"/>
+                </marker>
+            </defs>
+        </svg>
+    </main>
+
+    <!-- ========== 选中文本操作弹窗 ========== -->
+    <div class="selection-popup" id="selection-popup" style="display: none;">
+        <button type="button" class="popup-btn" id="add-note-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            添加笔记
+        </button>
+        <button type="button" class="popup-btn" id="add-vocab-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="16"></line>
+                <line x1="8" y1="12" x2="16" y2="12"></line>
+            </svg>
+            添加生词
+        </button>
+        <button type="button" class="popup-btn" id="highlight-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+            </svg>
+            高亮
+        </button>
+    </div>
+
+    <!-- ========== 添加角色模态框 ========== -->
+    <div class="modal-overlay" id="speaker-modal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 class="modal-title" id="speaker-modal-title">添加角色</h2>
+                <button class="modal-close" id="speaker-modal-close" aria-label="关闭">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form id="speaker-form">
+                <div class="modal-body">
+                    <input type="hidden" id="speaker-id">
+
+                    <!-- 角色名称 -->
+                    <div class="form-group">
+                        <label class="form-label" for="speaker-name">
+                            角色名称 <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-input" id="speaker-name"
+                               placeholder="例如：小明、Teacher" required maxlength="20">
+                        <p class="form-hint" id="speaker-name-hint"></p>
+                    </div>
+
+                    <!-- 头像设置 -->
+                    <div class="form-group">
+                        <label class="form-label">角色头像</label>
+                        <div class="avatar-setting">
+                            <div class="avatar-preview" id="avatar-preview">
+                                <span id="avatar-letter">A</span>
+                                <img id="avatar-image" src="" alt="" style="display: none;">
+                            </div>
+                            <div class="avatar-options">
+                                <div class="avatar-type-switch">
+                                    <label class="radio-option">
+                                        <input type="radio" name="avatar-type" value="letter" checked>
+                                        <span>使用首字母</span>
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="avatar-type" value="image">
+                                        <span>上传图片</span>
+                                    </label>
+                                </div>
+                                <div class="avatar-upload-area" id="avatar-upload-area" style="display: none;">
+                                    <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
+                                    <button type="button" class="btn btn-secondary btn-sm" id="choose-avatar-btn">
+                                        选择图片
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 头像颜色（首字母模式） -->
+                    <div class="form-group" id="avatar-color-group">
+                        <label class="form-label">头像颜色</label>
+                        <div class="color-picker" id="speaker-color-picker">
+                            <button type="button" class="color-option active" data-color="#2563eb" style="background-color: #2563eb;"></button>
+                            <button type="button" class="color-option" data-color="#10b981" style="background-color: #10b981;"></button>
+                            <button type="button" class="color-option" data-color="#f59e0b" style="background-color: #f59e0b;"></button>
+                            <button type="button" class="color-option" data-color="#ef4444" style="background-color: #ef4444;"></button>
+                            <button type="button" class="color-option" data-color="#8b5cf6" style="background-color: #8b5cf6;"></button>
+                            <button type="button" class="color-option" data-color="#ec4899" style="background-color: #ec4899;"></button>
+                            <button type="button" class="color-option" data-color="#06b6d4" style="background-color: #06b6d4;"></button>
+                            <button type="button" class="color-option" data-color="#64748b" style="background-color: #64748b;"></button>
+                        </div>
+                        <input type="hidden" id="speaker-color" value="#2563eb">
+                    </div>
+
+                    <!-- 默认位置 -->
+                    <div class="form-group">
+                        <label class="form-label">默认位置</label>
+                        <div class="position-options">
+                            <label class="radio-option">
+                                <input type="radio" name="speaker-position" value="left" checked>
+                                <span>居左（对方）</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="speaker-position" value="right">
+                                <span>居右（自己）</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="speaker-modal-cancel">取消</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========== 图片裁剪模态框 ========== -->
+    <div class="modal-overlay" id="crop-modal">
+        <div class="modal modal-lg">
+            <div class="modal-header">
+                <h2 class="modal-title">裁剪头像</h2>
+                <button class="modal-close" id="crop-modal-close" aria-label="关闭">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="crop-container">
+                    <div class="crop-area" id="crop-area">
+                        <img id="crop-image" src="" alt="待裁剪图片">
+                        <div class="crop-box" id="crop-box">
+                            <div class="crop-handle nw"></div>
+                            <div class="crop-handle ne"></div>
+                            <div class="crop-handle sw"></div>
+                            <div class="crop-handle se"></div>
+                        </div>
+                    </div>
+                    <div class="crop-controls">
+                        <div class="zoom-control">
+                            <label>缩放</label>
+                            <input type="range" id="crop-zoom" min="0.5" max="3" step="0.1" value="1">
+                            <span id="zoom-value">100%</span>
+                        </div>
+                        <div class="crop-preview-box">
+                            <label>预览</label>
+                            <div class="crop-preview" id="crop-preview"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="crop-cancel-btn">取消</button>
+                <button type="button" class="btn btn-primary" id="crop-confirm-btn">确认裁剪</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 添加笔记模态框 ========== -->
+    <div class="modal-overlay" id="note-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">添加笔记</h2>
+                <button class="modal-close" id="note-modal-close" aria-label="关闭">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form id="note-form">
+                <div class="modal-body">
+                    <div class="selected-text-preview">
+                        <label class="form-label">选中的文本</label>
+                        <div class="selected-text" id="selected-text-display"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="note-content">
+                            笔记内容 <span class="required">*</span>
+                        </label>
+                        <textarea class="form-textarea" id="note-content"
+                                  placeholder="输入您的笔记..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">高亮颜色</label>
+                        <div class="highlight-colors" id="highlight-colors">
+                            <button type="button" class="highlight-color active" data-color="#fef08a" style="background-color: #fef08a;"></button>
+                            <button type="button" class="highlight-color" data-color="#bbf7d0" style="background-color: #bbf7d0;"></button>
+                            <button type="button" class="highlight-color" data-color="#bfdbfe" style="background-color: #bfdbfe;"></button>
+                            <button type="button" class="highlight-color" data-color="#fecaca" style="background-color: #fecaca;"></button>
+                            <button type="button" class="highlight-color" data-color="#e9d5ff" style="background-color: #e9d5ff;"></button>
+                            <button type="button" class="highlight-color" data-color="#fed7aa" style="background-color: #fed7aa;"></button>
+                        </div>
+                        <input type="hidden" id="highlight-color" value="#fef08a">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="note-modal-cancel">取消</button>
+                    <button type="submit" class="btn btn-primary">保存笔记</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========== 添加生词模态框 ========== -->
+    <div class="modal-overlay" id="vocab-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">添加生词</h2>
+                <button class="modal-close" id="vocab-modal-close" aria-label="关闭">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form id="vocab-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label" for="vocab-word">
+                            生词 <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-input" id="vocab-word"
+                               placeholder="生词" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="vocab-phonetic">音标</label>
+                        <input type="text" class="form-input" id="vocab-phonetic"
+                               placeholder="例如：/həˈloʊ/">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="vocab-definition">
+                            释义 <span class="required">*</span>
+                        </label>
+                        <textarea class="form-textarea" id="vocab-definition"
+                                  placeholder="输入释义..." required style="min-height: 80px;"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="vocab-example">例句</label>
+                        <textarea class="form-textarea" id="vocab-example"
+                                  placeholder="输入例句..." style="min-height: 60px;"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="vocab-modal-cancel">取消</button>
+                    <button type="submit" class="btn btn-primary">保存生词</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========== 插入媒体模态框 ========== -->
+    <div class="modal-overlay" id="media-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="media-modal-title">插入媒体</h2>
+                <button class="modal-close" id="media-modal-close" aria-label="关闭">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="media-type">
+
+                <div class="media-tabs">
+                    <button type="button" class="media-tab active" data-tab="upload">本地上传</button>
+                    <button type="button" class="media-tab" data-tab="url">URL 链接</button>
+                </div>
+
+                <div class="media-tab-content active" id="tab-upload">
+                    <div class="upload-area" id="media-upload-area">
+                        <input type="file" id="media-file-input" style="display: none;">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p>点击上传文件</p>
+                        <span id="media-file-types"></span>
+                    </div>
+                    <div class="upload-preview" id="upload-preview" style="display: none;"></div>
+                </div>
+
+                <div class="media-tab-content" id="tab-url">
+                    <div class="form-group">
+                        <label class="form-label" for="media-url">媒体 URL</label>
+                        <input type="url" class="form-input" id="media-url"
+                               placeholder="请输入媒体链接地址">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="media-modal-cancel">取消</button>
+                <button type="button" class="btn btn-primary" id="media-insert-btn">插入</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 插入链接模态框 ========== -->
+    <div class="modal-overlay" id="link-modal">
+        <div class="modal" style="max-width: 450px;">
+            <div class="modal-header">
+                <h2 class="modal-title">插入链接</h2>
+                <button class="modal-close" id="link-modal-close" aria-label="关闭">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form id="link-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label" for="link-text">链接文本</label>
+                        <input type="text" class="form-input" id="link-text" placeholder="显示的文本">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="link-url">
+                            链接地址 <span class="required">*</span>
+                        </label>
+                        <input type="url" class="form-input" id="link-url"
+                               placeholder="https://" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-checkbox">
+                            <input type="checkbox" id="link-new-tab" checked>
+                            <span>在新标签页打开</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="link-modal-cancel">取消</button>
+                    <button type="submit" class="btn btn-primary">插入链接</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========== 插入表格模态框 ========== -->
+    <div class="modal-overlay" id="table-modal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 class="modal-title">插入表格</h2>
+                <button class="modal-close" id="table-modal-close" aria-label="关闭">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form id="table-form">
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="table-rows">行数</label>
+                            <input type="number" class="form-input" id="table-rows"
+                                   value="3" min="1" max="20" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="table-cols">列数</label>
+                            <input type="number" class="form-input" id="table-cols"
+                                   value="3" min="1" max="10" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-checkbox">
+                            <input type="checkbox" id="table-header" checked>
+                            <span>包含表头</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="table-modal-cancel">取消</button>
+                    <button type="submit" class="btn btn-primary">插入表格</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========== 替换文本模态框 ========== -->
+    <div class="modal-overlay" id="replacement-modal">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2 class="modal-title">替换文本</h2>
+                <button class="modal-close" id="replacement-modal-close" aria-label="关闭">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form id="replacement-form">
+                <div class="modal-body">
+                    <p class="form-hint" style="margin-bottom: 1rem;">
+                        点击表格中的替换文本可快速应用，点击"添加列"可添加更多备选文本
+                    </p>
+
+                    <!-- 替换文本表格 -->
+                    <div class="replacement-table-wrapper">
+                        <table class="replacement-table" id="replacement-table">
+                            <thead>
+                                <tr id="replacement-header-row">
+                                    <th class="col-mark">标记</th>
+                                    <th class="col-original">原文</th>
+                                    <!-- 动态添加的列 -->
+                                </tr>
+                            </thead>
+                            <tbody id="replacement-tbody">
+                                <!-- 动态生成 -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 添加列按钮 -->
+                    <div class="replacement-actions">
+                        <button type="button" class="btn btn-secondary btn-sm" id="add-replacement-col-btn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            添加备选列
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-sm" id="delete-current-col-btn" style="display: none;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                            删除当前列
+                        </button>
+                    </div>
+
+                    <!-- 当前选择预览 -->
+                    <div class="current-selection-preview">
+                        <label class="form-label">当前选择（<span id="current-col-index">原文</span>）</label>
+                        <div class="preview-content" id="preview-content">
+                            <!-- 预览内容 -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="replacement-reset-btn">恢复原文</button>
+                    <button type="button" class="btn btn-secondary" id="replacement-modal-cancel">取消</button>
+                    <button type="submit" class="btn btn-primary">应用当前选择</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========== 保存方案名称弹窗 ========== -->
+    <div class="modal-overlay" id="save-set-modal">
+        <div class="modal" style="max-width: 350px;">
+            <div class="modal-header">
+                <h2 class="modal-title">保存替换方案</h2>
+                <button class="modal-close" id="save-set-modal-close" aria-label="关闭">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form id="save-set-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label" for="set-name">方案名称 <span class="required">*</span></label>
+                        <input type="text" class="form-input" id="set-name" placeholder="例如：练习1、复习用" required maxlength="30">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="save-set-modal-cancel">取消</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========== 确认离开模态框 ========== -->
+    <div class="modal-overlay" id="confirm-leave-modal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 class="modal-title">确认离开</h2>
+                <button class="modal-close" id="confirm-leave-close" aria-label="关闭">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>您有未保存的更改，确定要离开吗？</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="confirm-leave-cancel">继续编辑</button>
+                <button type="button" class="btn btn-danger" id="confirm-leave-btn">不保存离开</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 页脚 ========== -->
+    <footer class="footer">
+        <p>© 2025 Asano Hoshiya | 数据存储于本地浏览器</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/lesson-edit.js"></script>
+</body>
+</html>
